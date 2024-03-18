@@ -8,15 +8,15 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 ################################################################################
 # Options
 
-option(ENABLE_MALLOC_COUNT "Keep track of allocations with malloc_count."   OFF)
-option(ENABLE_MIMALLOC "Use mimalloc if installed."                         OFF)
-option(BUILD_TESTS "Build unit test."                                       OFF)
+option(ENABLE_MALLOC_COUNT "Keep track of allocations with malloc_count." OFF)
+option(ENABLE_MIMALLOC "Use mimalloc if installed." OFF)
+option(BUILD_TESTS "Build unit test." OFF)
 
 ################################################################################
 # Set a default build type if none was specified
-if(NOT CMAKE_BUILD_TYPE)
+if (NOT CMAKE_BUILD_TYPE)
     set(CMAKE_BUILD_TYPE "Release" CACHE STRING "Choose Release or Debug" FORCE)
-endif()
+endif ()
 message(STATUS "Build type: ${CMAKE_BUILD_TYPE}")
 
 ################################################################################
@@ -52,11 +52,11 @@ configure_file(
 
 if (CMAKE_BUILD_TYPE STREQUAL "Release")
     set(BUILD_TYPE_FLAGS "-O3")
-elseif(CMAKE_BUILD_TYPE STREQUAL "Debug")
+elseif (CMAKE_BUILD_TYPE STREQUAL "Debug")
     set(BUILD_TYPE_FLAGS "-g")
-elseif(CMAKE_BUILD_TYPE STREQUAL "RelWithDebInfo")
+elseif (CMAKE_BUILD_TYPE STREQUAL "RelWithDebInfo")
     set(BUILD_TYPE_FLAGS "-O3 -g -DNDEBUG")
-endif()
+endif ()
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${BUILD_TYPE_FLAGS}")
 
@@ -72,7 +72,7 @@ FetchContent_Declare(
         GIT_REPOSITORY https://github.com/felipelouza/gsa-is.git
 )
 FetchContent_GetProperties(gsacak)
-if(NOT gsacak_POPULATED)
+if (NOT gsacak_POPULATED)
     FetchContent_Populate(gsacak)
     add_library(gsacak OBJECT ${gsacak_SOURCE_DIR}/gsacak.c ${gsacak_SOURCE_DIR}/gsacak.h)
     target_include_directories(gsacak PUBLIC "${gsacak_SOURCE_DIR}")
@@ -80,7 +80,7 @@ if(NOT gsacak_POPULATED)
     add_library(gsacak64 OBJECT ${gsacak_SOURCE_DIR}/gsacak.c ${gsacak_SOURCE_DIR}/gsacak.h)
     target_include_directories(gsacak64 PUBLIC "${gsacak_SOURCE_DIR}")
     target_compile_options(gsacak64 PUBLIC -DM64)
-endif()
+endif ()
 
 # sdsl
 FetchContent_Declare(
@@ -88,20 +88,20 @@ FetchContent_Declare(
         GIT_REPOSITORY https://github.com/simongog/sdsl-lite
 )
 FetchContent_GetProperties(sdsl)
-if(NOT sdsl_POPULATED)
+if (NOT sdsl_POPULATED)
     FetchContent_Populate(sdsl)
     set(GENERATE_DOC OFF CACHE BOOL "Do not generate doxygen for sdsl-lite")
     add_subdirectory(${sdsl_SOURCE_DIR} ${sdsl_BINARY_DIR} EXCLUDE_FROM_ALL)
-endif()
+endif ()
 
 # divsuffsort
 FetchContent_Declare(
         divsufsort
         GIT_REPOSITORY https://github.com/simongog/libdivsufsort.git
-        GIT_TAG        2.0.1
+        GIT_TAG 2.0.1
 )
 FetchContent_GetProperties(divsufsort)
-if(NOT divsufsort_POPULATED)
+if (NOT divsufsort_POPULATED)
     FetchContent_Populate(divsufsort)
     set(BUILD_SHARED_LIBS OFF CACHE BOOL "Do not build a shared library for libdivsufsort")
     set(BUILD_EXAMPLES OFF CACHE BOOL "Do not build libdivsufsort example")
@@ -109,44 +109,44 @@ if(NOT divsufsort_POPULATED)
     add_subdirectory(${divsufsort_SOURCE_DIR} ${divsufsort_BINARY_DIR} EXCLUDE_FROM_ALL)
     target_include_directories(divsufsort PUBLIC "${divsufsort_BINARY_DIR}/include")
     target_include_directories(divsufsort64 PUBLIC "${divsufsort_BINARY_DIR}/include")
-endif()
+endif ()
 
 # malloc count
 FetchContent_Declare(
         malloc_count
         GIT_REPOSITORY https://github.com/bingmann/malloc_count.git
-        GIT_TAG        v0.7.1
+        GIT_TAG v0.7.1
 )
 FetchContent_GetProperties(malloc_count)
-if(NOT malloc_count_POPULATED)
+if (NOT malloc_count_POPULATED)
     FetchContent_Populate(malloc_count)
     add_library(malloc_count OBJECT ${malloc_count_SOURCE_DIR}/malloc_count.c ${malloc_count_SOURCE_DIR}/malloc_count.h)
     target_include_directories(malloc_count PUBLIC "${malloc_count_SOURCE_DIR}")
     target_link_libraries(malloc_count dl)
-endif()
+endif ()
 
 # Catch
 FetchContent_Declare(
         Catch2
         GIT_REPOSITORY https://github.com/catchorg/Catch2.git
-        GIT_TAG        v3.0.1
+        GIT_TAG v3.0.1
 )
 # Making available only if building tests
 FetchContent_GetProperties(Catch2)
 if (NOT Catch2_POPULATED AND (BUILD_TESTS OR ${CMAKE_BUILD_TYPE} MATCHES "Debug"))
     FetchContent_MakeAvailable(Catch2)
-endif()
+endif ()
 
 # SPDLOG
 FetchContent_Declare(
         spdlog
         GIT_REPOSITORY https://github.com/gabime/spdlog.git
-        GIT_TAG        v1.10.0
+        GIT_TAG v1.10.0
 )
 FetchContent_GetProperties(spdlog)
-if(NOT spdlog_POPULATED)
+if (NOT spdlog_POPULATED)
     FetchContent_Populate(spdlog)
-endif()
+endif ()
 include_directories(${spdlog_SOURCE_DIR}/include)
 
 # CLI11
@@ -156,21 +156,21 @@ FetchContent_Declare(
         GIT_TAG "v1.9.0"
 )
 FetchContent_GetProperties(cli11)
-if(NOT cli11_POPULATED)
+if (NOT cli11_POPULATED)
     FetchContent_Populate(cli11)
-endif()
+endif ()
 include_directories(${cli11_SOURCE_DIR}/include)
 
 # PFP-DS
 FetchContent_Declare(
         pfp_ds
         GIT_REPOSITORY https://github.com/marco-oliva/PFP-DS.git
-        GIT_TAG        main
+        GIT_TAG main
 )
 FetchContent_GetProperties(pfp_ds)
-if(NOT pfp_ds_POPULATED)
+if (NOT pfp_ds_POPULATED)
     FetchContent_Populate(pfp_ds)
-endif()
+endif ()
 include_directories(${pfp_ds_SOURCE_DIR}/include)
 
 
@@ -180,9 +180,9 @@ FetchContent_Declare(
         GIT_REPOSITORY https://github.com/mandreyel/mio.git
 )
 FetchContent_GetProperties(mio)
-if(NOT mio_POPULATED)
+if (NOT mio_POPULATED)
     FetchContent_Populate(mio)
-endif()
+endif ()
 include_directories(${mio_SOURCE_DIR}/single_include)
 
 
@@ -190,23 +190,41 @@ include_directories(${mio_SOURCE_DIR}/single_include)
 FetchContent_Declare(
         rlestring
         GIT_REPOSITORY https://github.com/marco-oliva/rle_string.git
-        GIT_TAG        main
+        GIT_TAG main
 )
 FetchContent_GetProperties(rlestring)
-if(NOT rlestring_POPULATED)
+if (NOT rlestring_POPULATED)
     FetchContent_Populate(rlestring)
     add_subdirectory(${rlestring_SOURCE_DIR} ${rlestring_BINARY_DIR} EXCLUDE_FROM_ALL)
-endif()
+endif ()
 include_directories(${rlestring_SOURCE_DIR}/include)
 
 # Openmp
 find_package(OpenMP)
-if(OpenMP_FOUND OR OPENMP_FOUND)
+if (NOT OpenMP_FOUND AND NOT OPENMP_FOUND AND APPLE)
+    # Before we can hunt around for OpenMP on Apple we need to know where
+    # Homebrew is, if installed.
+    set(HOMEBREW_PREFIX "$ENV{HOMEBREW_PREFIX}")
+    if ("${HOMEBREW_PREFIX}" STREQUAL "")
+        # Ask Homebrew if it exists and where it is.
+        # Returns an empty string if this command can't run.
+        execute_process(COMMAND brew --prefix OUTPUT_STRIP_TRAILING_WHITESPACE OUTPUT_VARIABLE HOMEBREW_PREFIX)
+    endif ()
+    if ("${HOMEBREW_PREFIX}" STREQUAL "")
+        # Use defaults
+        if ("${CMAKE_SYSTEM_PROCESSOR}" STREQUAL "arm")
+            set(HOMEBREW_PREFIX "/opt/homebrew")
+        else ()
+            set(HOMEBREW_PREFIX "/usr/local")
+        endif ()
+    endif ()
+endif ()
+if (OpenMP_FOUND OR OPENMP_FOUND)
     message(STATUS "HAVE_OPENMP: OpenMP")
     set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${OpenMP_C_FLAGS}")
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${OpenMP_CXX_FLAGS}")
     set(OMP_LIBRARIES "${OpenMP_CXX_LIBRARIES}")
-elseif(APPLE AND EXISTS "/opt/local/lib/libomp")
+elseif (APPLE AND EXISTS "/opt/local/lib/libomp")
     # official Apple compiler with macports' libomp
     message(STATUS "HAVE_OPENMP: OpenMP[MacPorts]")
     set(CMAKE_C_FLAGS
@@ -214,15 +232,15 @@ elseif(APPLE AND EXISTS "/opt/local/lib/libomp")
     set(CMAKE_CXX_FLAGS
             "${CMAKE_CXX_FLAGS} -Xpreprocessor -fopenmp -I/opt/local/include/libomp")
     set(OMP_LIBRARIES "-L/opt/local/lib/libomp -lomp")
-elseif(APPLE AND EXISTS "/usr/local/opt/libomp")
-    # official Apple compiler with homebrew's kegg libomp
+elseif (APPLE AND EXISTS "${HOMEBREW_PREFIX}/opt/libomp")
+    # official Apple compiler with home brew's kegg libomp
     message(STATUS "HAVE_OPENMP: OpenMP[Homebrew kegg]")
     set(CMAKE_C_FLAGS
-            "${CMAKE_C_FLAGS} -Xpreprocessor -fopenmp -I/usr/local/opt/libomp/include")
+            "${CMAKE_C_FLAGS} -Xpreprocessor -fopenmp -I${HOMEBREW_PREFIX}/opt/libomp/include")
     set(CMAKE_CXX_FLAGS
-            "${CMAKE_CXX_FLAGS} -Xpreprocessor -fopenmp -I/usr/local/opt/libomp/include")
-    set(OMP_LIBRARIES "-L/usr/local/opt/libomp/lib -lomp")
-elseif(APPLE AND EXISTS "/usr/local/lib/libomp.dylib")
+            "${CMAKE_CXX_FLAGS} -Xpreprocessor -fopenmp -I${HOMEBREW_PREFIX}/opt/libomp/include")
+    set(OMP_LIBRARIES "-L${HOMEBREW_PREFIX}/opt/libomp/lib -lomp")
+elseif (APPLE AND EXISTS "/usr/local/lib/libomp.dylib")
     # official Apple compiler with homebrew's libomp
     message(STATUS "HAVE_OPENMP: OpenMP[Homebrew]")
     set(CMAKE_C_FLAGS
@@ -230,43 +248,43 @@ elseif(APPLE AND EXISTS "/usr/local/lib/libomp.dylib")
     set(CMAKE_CXX_FLAGS
             "${CMAKE_CXX_FLAGS} -Xpreprocessor -fopenmp")
     set(OMP_LIBRARIES "-L/usr/local/lib -lomp")
-elseif(${CMAKE_SYSTEM_NAME} MATCHES "Linux" AND EXISTS "/usr/local/lib64/libgomp.a")
+elseif (${CMAKE_SYSTEM_NAME} MATCHES "Linux" AND EXISTS "/usr/local/lib64/libgomp.a")
     # custom static openmp for official linux builds
     message(STATUS "HAVE_OPENMP: OpenMP[static]")
     set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Xpreprocessor -fopenmp")
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Xpreprocessor -fopenmp")
     set(OMP_LIBRARIES "/usr/local/lib64/libgomp.a")
-else()
+else ()
     message(STATUS "HAVE_OPENMP: NOT FOUND")
-endif()
+endif ()
 
 FetchContent_Declare(
         kseq
         GIT_REPOSITORY https://github.com/lh3/seqtk.git
-        GIT_TAG        v1.3
+        GIT_TAG v1.3
 )
-if(NOT kseq_POPULATED)
+if (NOT kseq_POPULATED)
     FetchContent_Populate(kseq)
-endif()
+endif ()
 include_directories(${kseq_SOURCE_DIR})
 
 # MiMalloc
 if (ENABLE_MIMALLOC)
     set(MI_BUILD_STATIC OFF)
     set(MI_BUILD_OBJECT OFF)
-    set(MI_BUILD_TESTS  OFF)
+    set(MI_BUILD_TESTS OFF)
     FetchContent_Declare(
             mimalloc
             GIT_REPOSITORY https://github.com/microsoft/mimalloc.git
-            GIT_TAG        v2.0.9
+            GIT_TAG v2.0.9
     )
     FetchContent_GetProperties(mimalloc)
     if (NOT mimalloc_POPULATED)
         FetchContent_MakeAvailable(mimalloc)
         message(STATUS "Building mimalloc. It will be dynamically linked.")
-    endif()
+    endif ()
     set(MIMALLOC_D_LIB mimalloc)
-endif()
+endif ()
 
 ################################################################################
 # Lib
@@ -279,14 +297,14 @@ file(GLOB SOURCES ${CMAKE_SOURCE_DIR}/src/*.cpp)
 if (ENABLE_MIMALLOC AND ENABLE_MALLOC_COUNT)
     message(STATUS "mimalloc enabled, disabling malloc count")
     set(ENABLE_MALLOC_COUNT FALSE)
-endif()
+endif ()
 
 if (ENABLE_MALLOC_COUNT)
     message(STATUS "Using malloc_count")
     set(MALLOC_COUNT_LIBRARIES malloc_count)
-else()
+else ()
     set(MALLOC_COUNT_LIBRARIES "")
-endif()
+endif ()
 
 set(RPFBWT_LIBS ${OMP_LIBRARIES} ${MALLOC_COUNT_LIBRARIES} ${MIMALLOC_D_LIB})
 
@@ -301,7 +319,7 @@ if (BUILD_TESTS OR ${CMAKE_BUILD_TYPE} MATCHES "Debug")
 
     enable_testing()
     add_test(NAME rpfbwt_unit_tests COMMAND rpfbwt_unit_tests [small])
-endif()
+endif ()
 
 ################################################################################
 # Targets
@@ -338,7 +356,7 @@ set(CPACK_SOURCE_PACKAGE_FILE_NAME "${CMAKE_PROJECT_NAME}-sources")
 set(CPACK_DEBIAN_PACKAGE_MAINTAINER "Marco Oliva")
 set(CPACK_DEBIAN_FILE_NAME DEB-DEFAULT)
 set(CPACK_COMPONENTS_GROUPING ALL_COMPONENTS_IN_ONE)
-set (CPACK_DEBIAN_PACKAGE_SHLIBDEPS ON)
+set(CPACK_DEBIAN_PACKAGE_SHLIBDEPS ON)
 set(CPACK_DEB_COMPONENT_INSTALL YES)
 include(CPack)
 

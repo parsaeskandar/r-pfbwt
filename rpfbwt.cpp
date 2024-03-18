@@ -9,8 +9,13 @@
 
 bool file_exists(std::string path)
 {
+#if defined(__APPLE__) || defined(__wasm__) || !defined(__GLIBC__)
+    struct stat stat_buf;
+    int rc = stat(path.c_str(), &stat_buf);
+#else
     struct stat64 stat_buf;
     int rc = stat64(path.c_str(), &stat_buf);
+#endif
     return rc == 0;
 }
 
